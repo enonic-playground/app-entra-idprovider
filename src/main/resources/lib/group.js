@@ -15,10 +15,10 @@ const forceArray = (data) => (Array.isArray(data) ? data : [data]);
 
 exports.createAndUpdateGroupsFromJwt = function(params) {
     var idProviderConfig = getIdProviderConfig();
-    log.info('idProviderConfig:' + toStr(idProviderConfig));
+    log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
     var createAndUpdateGroupsOnLoginFromGraphApi = !!idProviderConfig.createAndUpdateGroupsOnLoginFromGraphApi;
-    log.info('createAndUpdateGroupsOnLoginFromGraphApi:' + toStr(createAndUpdateGroupsOnLoginFromGraphApi));
+    log.debug('createAndUpdateGroupsOnLoginFromGraphApi:' + toStr(createAndUpdateGroupsOnLoginFromGraphApi));
 
     if (createAndUpdateGroupsOnLoginFromGraphApi) {
         return fromGraph(params);
@@ -72,7 +72,7 @@ function fromGraph(params) {
                 return t;
             }, [[]])
 
-            log.info('groupFilters:' + toStr(checkGroups))
+            log.debug('groupFilters:' + toStr(checkGroups))
 
             groups = groups.reduce((filteredGroups, group) => {
                 for(let i = 0; i < checkGroups.length; i++) {
@@ -94,7 +94,7 @@ function fromGraph(params) {
                 }
                 return filteredGroups;
             }, [])
-            log.info('groupsAfterFilter:' + toStr(groups));
+            log.debug('groupsAfterFilter:' + toStr(groups));
         }
 
         var groupKeysinAd = [];
@@ -107,13 +107,13 @@ function fromGraph(params) {
             });
             groupKeysinAd.push(xpGroup.key);
         });
-        log.info('groupKeysinAd:' + toStr(groupKeysinAd));
+        log.debug('groupKeysinAd:' + toStr(groupKeysinAd));
 
         var newGroupKeys = inFirstButNotInSecond(groupKeysinAd, groupKeysInXp);
-        log.info('newGroupKeys:' + toStr(newGroupKeys));
+        log.debug('newGroupKeys:' + toStr(newGroupKeys));
 
         var oldGroupKeys = inFirstButNotInSecond(groupKeysInXp, groupKeysinAd);
-        log.info('oldGroupKeys:' + toStr(oldGroupKeys));
+        log.debug('oldGroupKeys:' + toStr(oldGroupKeys));
 
         newGroupKeys.forEach(function(groupKey) {
             addUser({
@@ -130,7 +130,7 @@ function fromGraph(params) {
         });
         return groupKeysinAd
     } else {
-        log.info('Could not load and create groups on login, turn on debug to see more infomation');
+        log.debug('Could not load and create groups on login, turn on debug to see more infomation');
     }
 }
 
@@ -175,26 +175,26 @@ function getGroups(principalKey) {
 	var principals = runAsAdmin(function() {
 		return getMemberships(principalKey);
 	});
-	log.info('getGroups(' + toStr(principalKey) + ') principals:' + toStr(principals));
+	log.debug('getGroups(' + toStr(principalKey) + ') principals:' + toStr(principals));
 	var groups = principals.filter(function(principal) {
 		return principal.type === 'group';
 	});
-	log.info('getGroups(' + toStr(principalKey) + ') -->' + toStr(groups));
+	log.debug('getGroups(' + toStr(principalKey) + ') -->' + toStr(groups));
 	return groups;
 };
 
 
 function createOrModify(params) {
-    log.info('createOrModify(' + toStr(params) + ')');
+    log.debug('createOrModify(' + toStr(params) + ')');
 
     var group = runAsAdmin(function() {
         return getPrincipal('group:' + params.idProvider + ':' + params.name);
     });
-    //log.info('getPrincipalResult:' + toStr(group));
+    //log.debug('getPrincipalResult:' + toStr(group));
 
     if (group) {
         if (group.displayName === params.displayName && group.description === params.description) {
-            log.info('unchanged group:' + toStr(group));
+            log.debug('unchanged group:' + toStr(group));
         } else {
             group = runAsAdmin(function() {
                 return modifyGroup({
@@ -206,13 +206,13 @@ function createOrModify(params) {
                     }
                 });
             });
-            log.info('modified group:' + toStr(group));
+            log.debug('modified group:' + toStr(group));
         }
     } else {
         runAsAdmin(function() {
             group = createGroup(params);
         });
-        log.info('created group:' + toStr(group));
+        log.debug('created group:' + toStr(group));
     }
     return group;
 } // function createOrModify
@@ -221,14 +221,14 @@ function addUser(params) {
     var addMembersResult = runAsAdmin(function() {
         return addMembers(params.groupKey, [params.userKey]);
     });
-    log.info('addMembersResult:' + toStr(addMembersResult)); // In Enonic XP 6.9.2 return undefined even if group is unmodified
+    log.debug('addMembersResult:' + toStr(addMembersResult)); // In Enonic XP 6.9.2 return undefined even if group is unmodified
 }
 
 
 function removeUser(params) {
-    log.info('removeUser(' + toStr(params) + ')');
+    log.debug('removeUser(' + toStr(params) + ')');
     var removeMembersResult = runAsAdmin(function() {
         return removeMembers(params.groupKey, [params.userKey]);
     });
-    log.info('removeMembersResult:' + toStr(removeMembersResult));
+    log.debug('removeMembersResult:' + toStr(removeMembersResult));
 }
