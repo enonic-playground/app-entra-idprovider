@@ -3,6 +3,8 @@ const wellKnownService = require('/lib/configFile/wellKnownService');
 
 const END_SESSION_ADDITIONAL_PARAMETERS_PATTERN = '^idprovider\.[a-zA-Z0-9_-]+\.endSession\.additionalParameters\.(\\d+)\.(key|value)$';
 const ADDITIONAL_ENDPOINTS = "^idprovider\.[a-zA-Z0-9_-]+\.additionalEndpoints\.(\\d+)\.(name|url)$";
+const GROUP_FILTER =
+    /^idprovider\.[a-zA-Z0-9_-]+\.groupFilter\.(\d+)\.(groupProperty|regexp|and)$/;
 
 const parseStringArray = value => value ? value.split(' ').filter(v => !!v) : [];
 const firstAtsToDollar = value => value ? value.replace(/@@\{/g, '${') : value;
@@ -55,6 +57,16 @@ exports.getIdProviderConfig = function (idProviderName) {
             wsHeader: rawIdProviderConfig[`${idProviderKeyBase}.autoLogin.wsHeader`] === 'true' || false,
             allowedAudience: parseStringArray(rawIdProviderConfig[`${idProviderKeyBase}.autoLogin.allowedAudience`]),
         },
+        createAndUpdateGroupsOnLoginFromGraphApi: defaultBooleanTrue(
+            rawIdProviderConfig[
+                `${idProviderKeyBase}.createAndUpdateGroupsOnLoginFromGraphApi`
+            ]
+        ),
+        groupFilter: extractPropertiesToArray(
+            rawIdProviderConfig,
+            `${idProviderKeyBase}.groupFilter.`,
+            GROUP_FILTER
+        )
     };
 
     if (hasProperty(rawIdProviderConfig, idProviderKeyBase, 'endSession')) {
