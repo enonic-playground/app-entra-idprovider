@@ -1,3 +1,18 @@
+const authLib = require('/lib/xp/auth')
+const httpClient = require('/lib/http-client');
+const contextLib = require('/lib/xp/context')
+const configLib = require('/lib/config')
+
+const addMembers = authLib.addMembers;
+const createGroup = authLib.createGroup;
+const getIdProviderConfig = configLib.getIdProviderConfig;
+const getPrincipal = authLib.getPrincipal
+const modifyGroup = authLib.modifyGroup;
+const removeMembers = authLib.removeMembers;
+const sendRequest = httpClient.request;
+const getMemberships = authLib.getMemberships;
+const forceArray = (data) => (Array.isArray(data) ? data : [data]);
+
 exports.createAndUpdateGroupsFromJwt = function(params) {
     var idProviderConfig = getIdProviderConfig();
     log.info('idProviderConfig:' + toStr(idProviderConfig));
