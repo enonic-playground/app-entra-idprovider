@@ -84,6 +84,15 @@ exports.getIdProviderConfig = function (idProviderName) {
         takeConfigurationFromWellKnownEndpoint(config);
     }
 
+    if (hasProperty(rawIdProviderConfig, idProviderKeyBase, 'proxy')) {
+        config.proxy = {
+            host: required(rawIdProviderConfig[`${idProviderKeyBase}.proxy.host`], 'proxy.host', idProviderName),
+            port: rawIdProviderConfig[`${idProviderKeyBase}.proxy.port`] || null,
+            user: rawIdProviderConfig[`${idProviderKeyBase}.proxy.user`] || null,
+            password: rawIdProviderConfig[`${idProviderKeyBase}.proxy.password`] || null,
+        }
+    }
+
     validate(config, idProviderName);
 
     wellKnownService.cacheIdProviderConfig(idProviderName, config);

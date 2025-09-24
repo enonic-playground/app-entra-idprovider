@@ -40,9 +40,9 @@ function fromGraph(params) {
             Accept: 'application/json',
             Authorization: 'Bearer ' + params.accessToken
         },
-        //proxy: idProviderConfig.proxy
+        proxy: idProviderConfig.proxy
     };
-
+    
     var groupResponse = sendRequest(groupRequest);
 
     var body = JSON.parse(groupResponse.body);
