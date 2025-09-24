@@ -66,7 +66,8 @@ exports.getIdProviderConfig = function (idProviderName) {
             rawIdProviderConfig,
             `${idProviderKeyBase}.groupFilter.`,
             GROUP_FILTER
-        )
+        ),
+        pageSize: rawIdProviderConfig[`${idProviderKeyBase}.pageSize`] || null
     };
 
     if (hasProperty(rawIdProviderConfig, idProviderKeyBase, 'endSession')) {
