@@ -68,7 +68,7 @@ exports.getIdProviderConfig = function (idProviderName) {
             GROUP_FILTER
         ),
         pageSize: rawIdProviderConfig[`${idProviderKeyBase}.pageSize`] || null,
-        groupPrefix: rawIdProviderConfig[`${idProviderKeyBase}.groupPrefix`] ?? 'azure-ad-' 
+        groupPrefix: rawIdProviderConfig[`${idProviderKeyBase}.groupPrefix`] || 'azure-ad-' 
     };
 
     if (hasProperty(rawIdProviderConfig, idProviderKeyBase, 'endSession')) {
