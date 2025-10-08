@@ -6,7 +6,6 @@ const preconditions = require('/lib/preconditions');
 const authLib = require('/lib/xp/auth');
 const portalLib = require('/lib/xp/portal');
 const jwtLib = require('/lib/jwt');
-const groupLib = require("/lib/group");
 
 function redirectToAuthorizationEndpoint() {
     const idProviderConfig = configLib.getIdProviderConfig();
@@ -97,24 +96,7 @@ function handleAuthenticationResponse(req) {
 
     checkClaimUsername(idToken.claims, idProviderConfig.claimUsername);
 
-    const loginResult = loginLib.login(
-        idToken.accessToken,
-        idToken.claims,
-        false
-    );
-
-    const groupParams = {
-        accessToken: idToken.accessToken,
-        user: loginResult.user,
-        jwt: {
-            payload: {
-                oid: idToken.claims.oid
-            }
-        }
-    };
-
-    const fetchedGroupKeys = groupLib.createAndUpdateGroupsFromJwt(groupParams, idProviderConfig);
-    log.debug("Group keys fetched from Microsoft Graph API: ", JSON.stringify(fetchedGroupKeys));
+    loginLib.login(idToken.accessToken, idToken.claims, false);
 
     if (idProviderConfig.endSession && idProviderConfig.endSession.idTokenHintKey) {
         requestLib.storeIdToken(idToken.idToken);
