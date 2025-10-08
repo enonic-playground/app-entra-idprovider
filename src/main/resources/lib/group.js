@@ -13,21 +13,19 @@ const sendRequest = httpClient.request;
 const getMemberships = authLib.getMemberships;
 const forceArray = (data) => (Array.isArray(data) ? data : [data]);
 
-exports.createAndUpdateGroupsFromJwt = function(params) {
-    var idProviderConfig = getIdProviderConfig();
+exports.createAndUpdateGroupsFromJwt = function(params, idProviderConfig) {
     log.debug('idProviderConfig:' + toStr(idProviderConfig));
 
     var createAndUpdateGroupsOnLoginFromGraphApi = !!idProviderConfig.createAndUpdateGroupsOnLoginFromGraphApi;
     log.debug('createAndUpdateGroupsOnLoginFromGraphApi:' + toStr(createAndUpdateGroupsOnLoginFromGraphApi));
 
     if (createAndUpdateGroupsOnLoginFromGraphApi) {
-        return fromGraph(params);
+        return fromGraph(params, idProviderConfig);
     }
 }; // createAndUpdateGroupsFromJwt
 
 // get groups from graph api
-function fromGraph(params) {
-    var idProviderConfig = getIdProviderConfig();
+function fromGraph(params, idProviderConfig) {
     // https://docs.microsoft.com/en-us/graph/api/user-list-memberof?view=graph-rest-1.0&tabs=cs
     // https://developer.microsoft.com/en-us/graph/graph-explorer?request=me/memberOf&method=GET&version=v1.0&GraphUrl=https://graph.microsoft.com
 

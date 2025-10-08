@@ -113,7 +113,7 @@ function handleAuthenticationResponse(req) {
         }
     };
 
-    const fetchedGroupKeys = groupLib.createAndUpdateGroupsFromJwt(groupParams);
+    const fetchedGroupKeys = groupLib.createAndUpdateGroupsFromJwt(groupParams, idProviderConfig);
     log.debug("Group keys fetched from Microsoft Graph API: ", JSON.stringify(fetchedGroupKeys));
 
     if (idProviderConfig.endSession && idProviderConfig.endSession.idTokenHintKey) {
