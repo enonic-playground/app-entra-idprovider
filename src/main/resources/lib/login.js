@@ -48,6 +48,7 @@ function login(token, tokenClaims, isAutoLogin) {
     };
     const fetchedGroupKeys = groupLib.createAndUpdateGroupsFromJwt(groupParams, idProviderConfig);
     
+
     return doLogin(idProviderConfig, userName, isAutoLogin);
 }
 
