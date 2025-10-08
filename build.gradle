@@ -2,7 +2,7 @@ plugins {
     id 'jacoco'
     id 'maven-publish'
     id 'com.enonic.defaults' version '2.1.5'
-    id 'com.enonic.xp.app' version '3.6.1'
+    id 'com.enonic.xp.app' version '3.6.2'
 }
 
 app {
@@ -27,7 +27,7 @@ dependencies {
     include 'com.auth0:jwks-rsa:0.23.0'
 
     testImplementation "com.enonic.xp:testing:${xpVersion}"
-    testImplementation(platform('org.junit:junit-bom:5.13.4'))
+    testImplementation(platform('org.junit:junit-bom:6.0.0'))
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

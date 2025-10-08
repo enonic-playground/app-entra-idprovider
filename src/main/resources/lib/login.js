@@ -37,9 +37,7 @@ function login(token, tokenClaims, isAutoLogin) {
         updateUserData(claims, idProviderConfig, user);
     }
 
-    const loginResult = doLogin(idProviderConfig, userName, isAutoLogin);
-
-    return loginResult;
+    return doLogin(idProviderConfig, userName, isAutoLogin);
 }
 
 function getClaim(claims, claimKey) {
