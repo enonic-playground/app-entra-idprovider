@@ -38,15 +38,17 @@ function login(token, tokenClaims, isAutoLogin) {
         updateUserData(claims, idProviderConfig, user);
     }
     
-    const resolvedUser = contextLib.runAsSu(() => authLib.getPrincipal(principalKey));
-    const groupParams = {
-        accessToken: token,
-        user: resolvedUser,
-        jwt: {
-            payload: tokenClaims
-        }
-    };
-    const fetchedGroupKeys = groupLib.createAndUpdateGroupsFromJwt(groupParams, idProviderConfig);
+    if (!isAutoLogin) {
+        const resolvedUser = contextLib.runAsSu(() => authLib.getPrincipal(principalKey));
+        const groupParams = {
+            accessToken: token,
+            user: resolvedUser,
+            jwt: {
+                payload: tokenClaims
+            }
+        };
+        const fetchedGroupKeys = groupLib.createAndUpdateGroupsFromJwt(groupParams, idProviderConfig);
+    }
     
 
     return doLogin(idProviderConfig, userName, isAutoLogin);
