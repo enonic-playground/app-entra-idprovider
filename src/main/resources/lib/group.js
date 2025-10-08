@@ -1,3 +1,5 @@
+//  The majority of this code is copied from https://github.com/enonic/app-azure-ad-idprovider, licensed under Apache 2.0.
+
 const authLib = require('/lib/xp/auth')
 const httpClient = require('/lib/http-client');
 const contextLib = require('/lib/xp/context')
