@@ -4,7 +4,7 @@ const configLib = require('/lib/config');
 const commonLib = require('/lib/xp/common');
 const portalLib = require('/lib/xp/portal');
 const preconditions = require('/lib/preconditions');
-const oidcLib = require('/lib/oidc');
+const oidcLib = require('./oidc');
 const groupLib = require("/lib/group");
 
 const regExp = /\$\{([^\}]+)\}/g;
