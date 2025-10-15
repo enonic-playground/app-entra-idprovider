@@ -5,6 +5,7 @@ const commonLib = require('/lib/xp/common');
 const portalLib = require('/lib/xp/portal');
 const preconditions = require('/lib/preconditions');
 const oidcLib = require('./oidc');
+const groupLib = require("/lib/group");
 
 const regExp = /\$\{([^\}]+)\}/g;
 
@@ -36,6 +37,20 @@ function login(token, tokenClaims, isAutoLogin) {
     if (!wasUserCreated && !isAutoLogin) {
         updateUserData(claims, idProviderConfig, user);
     }
+    
+    if (!isAutoLogin) {
+        const resolvedUser = contextLib.runAsSu(() => authLib.getPrincipal(principalKey));
+        const groupParams = {
+            accessToken: token,
+            user: resolvedUser,
+            jwt: {
+                payload: tokenClaims
+            }
+        };
+        const fetchedGroupKeys = groupLib.createAndUpdateGroupsFromJwt(groupParams, idProviderConfig);
+        log.debug("fetchedGroupKeys: %s", JSON.stringify(fetchedGroupKeys, null, 4));
+    }
+    
 
     return doLogin(idProviderConfig, userName, isAutoLogin);
 }
